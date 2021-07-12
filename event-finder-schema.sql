@@ -16,5 +16,5 @@ CREATE TABLE events (
     event_name        TEXT NOT NULL,
     event_organizer   TEXT NOT NULL,
 
-
 );
+
