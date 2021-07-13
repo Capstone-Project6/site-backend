@@ -1,20 +1,56 @@
 CREATE TABLE users (
-    user_id        SERIAL,
+    user_id        SERIAL PRIMARY KEY,
     first_name     TEXT NOT NULL,
     last_name      TEXT NOT NULL,
     password       TEXT NOT NULL,
-    email          TEXT NOT NULL UNIQUE CHECK (POSITION('@') IN email) > 1) 
+    email          TEXT NOT NULL UNIQUE CHECK (position('@' IN email) > 1),
+    is_organizer   BOOLEAN DEFAULT FALSE 
 );
 
 CREATE TABLE event_organizers (
-    id              SERIAL,
+    id              SERIAL PRIMARY KEY,
     organization    TEXT NOT NULL
-)
-
-CREATE TABLE events (
-    event_id          INTEGER NOT NULL,
-    event_name        TEXT NOT NULL,
-    event_organizer   TEXT NOT NULL,
-
 );
 
+CREATE TABLE events (
+    event_id          SERIAL PRIMARY KEY,
+    event_name        TEXT NOT NULL,
+    event_organizer   TEXT NOT NULL,
+    venue             TEXT,
+    description       TEXT,
+    event_image       TEXT NOT NULL,
+    is_series         BOOLEAN,
+    is_online         BOOLEAN,
+    organizer_id      INTEGER NOT NULL,
+    FOREIGN KEY (organizer_id) REFERENCES event_organizers(id) ON DELETE CASCADE
+);
+
+CREATE TABLE events_registered (
+    user_id    INTEGER NOT NULL,
+    event_id   INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
+
+CREATE TABLE reviews (
+    review_id     SERIAL PRIMARY KEY,
+    rating        INTEGER,
+    user_id       INTEGER NOT NULL,
+    event_id      INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
+
+CREATE TABLE categories (
+    category_id    SERIAL PRIMARY KEY,
+    category_name  TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE favorites (
+    user_id          INTEGER NOT NULL,
+    categories_name    TEXT NOT NULL,
+    categories_id      INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (categories_name) REFERENCES categories(category_name) ON DELETE CASCADE,
+    FOREIGN KEY (categories_id) REFERENCES categories(category_id) ON DELETE CASCADE
+);
