@@ -10,13 +10,13 @@ class Event {
                    e.event_organizer AS "event_organizer",
                    e.event_id AS "event_id",
                    e.venue AS "venue"
-            FROM event AS e
+            FROM events AS e
             `
         )
         return results.rows
 }
 
-static async createEvent({ event, user }){
+static async createEvent({ event }){
     const requiredFields = ['event_name', 'event_organizer', 'venue', 'description', 'event_image', 'start_date', 'end_date']
     requiredFields.forEach(field => {
         if (!event.hasOwnProperty(field)){
@@ -25,8 +25,8 @@ static async createEvent({ event, user }){
         })
     const results = await db.query(
         `
-        INSERT INTO event (event_name, event_organizer, venue, description, event_image, start_date, end_date)
-        VALUES($1, $2, $3, $4, $5, $6, (SELECT id FROM event WHERE id = $7))
+        INSERT INTO events (event_name, event_organizer, venue, description, event_image, start_date, end_date)
+        VALUES($1, $2, $3, $4, $5, $6, $7)
         Returning id,
                   event_name AS "eventName",
                   event_organizer AS "eventOrganizer",
