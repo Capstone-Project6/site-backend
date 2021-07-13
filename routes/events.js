@@ -7,6 +7,8 @@ const router = express.Router()
 router.get("/", async (req, res, next) => {
     try {
         // display popular events on homepage
+        const feed = await Event.listEvents()
+        return res.status(200).json({ feed })
         } catch(err) {
             next(err)
         }
