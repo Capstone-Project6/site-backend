@@ -22,6 +22,9 @@ CREATE TABLE events (
     is_series         BOOLEAN,
     is_online         BOOLEAN,
     organizer_id      INTEGER NOT NULL,
+    total_tickets     INTEGER NOT NULL,
+    tickets_sold      INTEGER NOT NULL,
+    tickets_left      INTEGER NOT NULL,
     FOREIGN KEY (organizer_id) REFERENCES event_organizers(id) ON DELETE CASCADE
 );
 
