@@ -5,13 +5,15 @@ const router = express.Router()
 
 router.get("/", async (req, res, next) => {
     try {
-        // display popular events on homepage
+        // display events on homepage
         const feed = await Event.listEvents()
-        return res.status(200).json({ feed })
+        // console.log(feed)
+        return res.status(200).json( {feed} )
         } catch(err) {
             next(err)
         }
 })
+
 
 router.post("/create-event", security.requireAuthenticatedUser, async (req, res, next) => {
     try {

@@ -24,6 +24,7 @@ class User {
     const user = await User.fetchUserByEmail(credentials.email)
     if (user) {
       const isValid = await bcrypt.compare(credentials.password, user.password)
+      console.log(user, isValid)
       if (isValid) {
         return User.makePublicUser(user)
       }

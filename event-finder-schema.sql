@@ -7,15 +7,15 @@ CREATE TABLE users (
     is_organizer   BOOLEAN DEFAULT FALSE 
 );
 
-CREATE TABLE event_organizers (
-    id              SERIAL PRIMARY KEY,
-    organization    TEXT NOT NULL
-);
+-- CREATE TABLE event_organizers (
+--     id              SERIAL PRIMARY KEY,
+--     organization    TEXT NOT NULL
+-- );
 
 CREATE TABLE events (
     event_id          SERIAL PRIMARY KEY,
     event_name        TEXT NOT NULL,
-    event_organizer   TEXT NOT NULL,
+    -- event_organizer   TEXT NOT NULL,
     venue             TEXT,
     description       TEXT,
     event_image       TEXT NOT NULL,
@@ -25,7 +25,9 @@ CREATE TABLE events (
     total_tickets     INTEGER NOT NULL,
     tickets_sold      INTEGER NOT NULL,
     tickets_left      INTEGER NOT NULL,
-    FOREIGN KEY (organizer_id) REFERENCES event_organizers(id) ON DELETE CASCADE
+    created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
+    -- FOREIGN KEY (organizer_id) REFERENCES event_organizers(id) ON DELETE CASCADE
+    FOREIGN KEY (organizer_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE events_registered (

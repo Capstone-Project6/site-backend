@@ -6,3 +6,5 @@ CREATE DATABASE event_finder;
 \connect event_finder
 
 \i event-finder-schema.sql
+
+\i event-finder-data.sql 
