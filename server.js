@@ -6,6 +6,7 @@ const { NotFoundError } = require("./utils/errors")
 const security = require("./middleware/security")
 const authRoutes = require("./routes/auth")
 const eventsRoute = require("./routes/events")
+const profileRoutes = require("./routes/profiles")
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(security.extractUserFromJwt)
 
 app.use("/auth", authRoutes)
 app.use("/events", eventsRoute)
+app.use("/profile", profileRoutes)
 
 /** Handle 404 errors -- this matches everything */
 app.use((req, res, next) => {

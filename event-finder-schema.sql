@@ -1,10 +1,13 @@
 CREATE TABLE users (
-    user_id        SERIAL PRIMARY KEY,
-    first_name     TEXT NOT NULL,
-    last_name      TEXT NOT NULL,
-    password       TEXT NOT NULL,
-    email          TEXT NOT NULL UNIQUE CHECK (position('@' IN email) > 1),
-    is_organizer   BOOLEAN DEFAULT FALSE 
+    user_id         SERIAL PRIMARY KEY,
+    first_name      TEXT NOT NULL,
+    last_name       TEXT NOT NULL,
+    password        TEXT NOT NULL,
+    city            TEXT DEFAULT 'City',
+    state           TEXT DEFAULT 'State',
+    profile_picture TEXT DEFAULT 'https://www.seekpng.com/png/full/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+    email           TEXT NOT NULL UNIQUE CHECK (position('@' IN email) > 1),
+    is_organizer    BOOLEAN DEFAULT FALSE 
 );
 
 -- CREATE TABLE event_organizers (
@@ -17,7 +20,13 @@ CREATE TABLE events (
     event_name        TEXT NOT NULL,
     -- event_organizer   TEXT NOT NULL,
     venue             TEXT,
+    city              TEXT,
+    state             TEXT,
     description       TEXT,
+    beginning_date    TEXT NOT NULL,
+    end_date          TEXT,
+    beginning_time    TEXT NOT NULL,
+    end_time          TEXT,
     event_image       TEXT NOT NULL,
     is_series         BOOLEAN,
     is_online         BOOLEAN,
