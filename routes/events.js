@@ -34,6 +34,8 @@ router.put("/update-event", security.requireAuthenticatedUser, async (req, res, 
 router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
         // display recommended events
+        // const feed = await Event.listRecommendedEvents()
+        // return res.status(200).json( {feed} )
         } catch(err) {
             next(err)
         }
