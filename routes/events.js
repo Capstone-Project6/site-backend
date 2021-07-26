@@ -7,13 +7,19 @@ router.get("/", async (req, res, next) => {
     try {
         // display events on homepage
         const feed = await Event.listEvents()
-        // console.log(feed)
         return res.status(200).json( {feed} )
+    } catch(err) {
+        next(err)
+    }
+})
+
+router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
+    try {
+        const recommendations = await Event.listRecommendedEvents()
         } catch(err) {
             next(err)
         }
 })
-
 
 router.post("/create-event", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
@@ -31,15 +37,6 @@ router.put("/update-event", security.requireAuthenticatedUser, async (req, res, 
         }
 })
 
-router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
-    try {
-        // display recommended events
-        // const feed = await Event.listRecommendedEvents()
-        // return res.status(200).json( {feed} )
-        } catch(err) {
-            next(err)
-        }
-})
 
 router.get("/event-details", async (req, res, next) => {
     try {

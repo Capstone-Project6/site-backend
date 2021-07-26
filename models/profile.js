@@ -8,15 +8,15 @@ class Profile {
             `
             UPDATE users
             SET profile_picture = $1,
-                city = $2,
-                state = $3,
-            WHERE user_id = $4
-            RETURNING user_id AS "userID,
+                city = $3,
+                state = $4
+            WHERE user_id = $2
+            RETURNING user_id AS "userID",
                       profile_picture AS "profilePicture",
                       city AS "City",
                       state AS "State"
             `,
-                [profileUpdate.profile_picture, userId]
+                [profileUpdate.profilePicture, userId, profileUpdate.city, profileUpdate.state]
         )
 
         return results.rows[0]
