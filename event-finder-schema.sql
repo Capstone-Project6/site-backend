@@ -6,6 +6,8 @@ CREATE TABLE users (
     city            TEXT DEFAULT 'City',
     state           TEXT DEFAULT 'State',
     profile_picture TEXT DEFAULT 'https://www.seekpng.com/png/full/966-9665493_my-profile-icon-blank-profile-image-circle.png',
+    imgname         TEXT,
+    img             BYTEA,
     email           TEXT NOT NULL UNIQUE CHECK (position('@' IN email) > 1),
     is_organizer    BOOLEAN DEFAULT FALSE 
 );
