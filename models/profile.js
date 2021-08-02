@@ -16,7 +16,7 @@ class Profile {
                       city AS "City",
                       state AS "State"
             `,
-                [profileUpdate.profilePicture, userId, profileUpdate.city, profileUpdate.state]
+                [profileUpdate.profile_picture, userId, profileUpdate.city, profileUpdate.state]
         )
 
         return results.rows[0]
