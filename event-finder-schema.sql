@@ -17,7 +17,8 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     category_id    SERIAL PRIMARY KEY,
-    category_name  TEXT NOT NULL UNIQUE
+    category_name  TEXT NOT NULL UNIQUE,
+    category_image TEXT NOT NULL
 );
 
 CREATE TABLE events (

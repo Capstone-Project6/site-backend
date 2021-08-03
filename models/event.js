@@ -91,6 +91,18 @@ class Event {
         )
         return results.rows[0]
     }
+
+    static async getCategories(){
+        const results = await db.query(
+            `SELECT c.category_id,
+                    c.category_name,
+                    c.category_image
+            FROM categories as c
+            GROUP BY c.category_id
+            `
+        )
+        return results.rows
+    }
 }
 
 module.exports = Event
