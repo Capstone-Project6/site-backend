@@ -28,7 +28,7 @@ class Event {
         return results.rows
     }
 
-    static async listRecommendedEvents(){
+    static async listRecommendedEvents(userId){
         const results = await db.query(
             `
             SELECT e.event_id AS "Event ID",
@@ -36,6 +36,7 @@ class Event {
                    e.venue AS "Venue",
                    e.city AS "City",
                    e.state As "State",
+                   e.category_name AS "categoryName",
                    e.description AS "Description",
                    e.event_image AS "Event Image",
                    e.created_at AS "Created At",
@@ -45,6 +46,8 @@ class Event {
                    e.beginning_time AS "Beginning Time",
                    e.end_time AS "Ending Time"
             FROM events AS e
+            JOIN favorites AS f ON e.category_name = f.categories_name  
+            JOIN users AS u ON u.user_id = f.user_id
             GROUP BY e.event_id
             ORDER BY e.created_at DESC
         `)
@@ -73,6 +76,32 @@ class Event {
             `, [event.event_name, event.event_organizer, event.venue, event.description, event.event_image, event.start_date, event.end_date] 
             )
         return results.rows[0] 
+    }
+
+    static async addFavorite({ interests, userId }){
+        const results = await db.query(
+            `
+            INSERT INTO favorites 
+            VALUES($1, $2, $3)
+            RETURNING user_id AS "userId",
+             categories_id AS "categoryId",
+             categories_name AS "categoryName"
+            
+             `, [userId, interests.categories_id, interests.categories_name]
+        )
+        return results.rows[0]
+    }
+
+    static async getCategories(){
+        const results = await db.query(
+            `SELECT c.category_id,
+                    c.category_name,
+                    c.category_image
+            FROM categories as c
+            GROUP BY c.category_id
+            `
+        )
+        return results.rows
     }
 }
 

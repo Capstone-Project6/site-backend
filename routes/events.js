@@ -13,9 +13,10 @@ router.get("/", async (req, res, next) => {
     }
 })
 
-router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
+router.get("/:userId/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
         const recommendations = await Event.listRecommendedEvents()
+        return res.status(200).json( { recommendations })
         } catch(err) {
             next(err)
         }
@@ -72,15 +73,26 @@ router.delete("/event", async (req, res, next) => {
 })
 
 
+router.post("/:userId/favorites", async (req, res, next) => {
+    const interests = req.body
+    const { userId } = req.params
+    try {
+        const favorites = await Event.addFavorite({ interests, userId })
+        return res.status(200).json( { favorites })
+        } catch(err) {
+            next(err)
+        }
+})
 
-
-
-
-
-
-
-
-
+router.get("/categories", async (req, res, next) => {
+    try {
+        console.log("categories")
+        const categories = await Event.getCategories()
+        return res.status(200).json( { categories } )
+    } catch(err) {
+        next(err)
+    }
+})
 
 
 

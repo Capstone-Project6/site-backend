@@ -17,7 +17,8 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     category_id    SERIAL PRIMARY KEY,
-    category_name  TEXT NOT NULL UNIQUE
+    category_name  TEXT NOT NULL UNIQUE,
+    category_image TEXT NOT NULL
 );
 
 CREATE TABLE events (
@@ -64,9 +65,9 @@ CREATE TABLE reviews (
 
 CREATE TABLE favorites (
     user_id          INTEGER NOT NULL,
-    categories_name    TEXT NOT NULL,
-    categories_id      INTEGER NOT NULL,
+    categories_id    INTEGER NOT NULL,
+    categories_name  TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (categories_name) REFERENCES categories(category_name) ON DELETE CASCADE,
-    FOREIGN KEY (categories_id) REFERENCES categories(category_id) ON DELETE CASCADE
+    FOREIGN KEY (categories_id) REFERENCES categories(category_id) ON DELETE CASCADE,
+    FOREIGN KEY (categories_name) REFERENCES categories(category_name) ON DELETE CASCADE
 );

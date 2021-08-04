@@ -35,17 +35,17 @@ INSERT INTO users (first_name, last_name, password, email, is_organizer) VALUES
     -- The Party people
     ('The Party People', 'LLC', 'partyparty#', 'thepartypeople@io', FALSE);
 
-INSERT INTO categories (category_name) VALUES
-    ('Sports'),
-    ('Food'),
-    ('Music'),
-    ('Charity'),
-    ('Gaming'),
-    ('Party'),
-    ('Entertainment'),
-    ('Education'),
-    ('Business'),
-    ('Social');
+INSERT INTO categories(category_name, category_image) VALUES
+    ('Sports', 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2849&q=80'),
+    ('Food', 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+    ('Music', 'https://images.unsplash.com/photo-1563841930606-67e2bce48b78?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80'),
+    ('Charity', 'https://images.unsplash.com/photo-1593113598332-cd288d649433?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+    ('Gaming', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80'),
+    ('Party', 'https://images.unsplash.com/photo-1517456793572-1d8efd6dc135?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'),
+    ('Entertainment', 'https://images.unsplash.com/photo-1565009520170-c809ddd9ac3c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80'),
+    ('Education', 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1082&q=80'),
+    ('Business', 'https://images.unsplash.com/photo-1573164574511-73c773193279?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'),
+    ('Social', 'https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2850&q=80');
 
 
 INSERT INTO events(event_name, venue, city, state, category_name, beginning_date, beginning_time, end_time, description, event_image, is_series, is_online, organizer_id, total_tickets, tickets_sold, tickets_left) VALUES
