@@ -78,7 +78,8 @@ class Event {
         return results.rows[0] 
     }
 
-    static async addFavorite({ interests, userId }){
+    static async addFavorite(interests, {userId}){
+        // console.log(interests)
         const results = await db.query(
             `
             INSERT INTO favorites 
@@ -89,6 +90,7 @@ class Event {
             
              `, [userId, interests.categories_id, interests.categories_name]
         )
+        console.log(results.rows[0])
         return results.rows[0]
     }
 

@@ -74,14 +74,22 @@ router.delete("/event", async (req, res, next) => {
 
 
 router.post("/:userId/favorites", async (req, res, next) => {
-    const interests = req.body
+    const favorites = []
+    const interests = req.body 
     const { userId } = req.params
-    try {
-        const favorites = await Event.addFavorite({ interests, userId })
+        interests.map(async (interest) => {
+            // console.log(interest)
+            try {
+                const fav = 
+                await Event.addFavorite(interest, {userId})
+                console.log(fav)
+                favorites.push(fav)
+            } catch(err) {
+                console.log("error")
+                console.log(err)
+                next(err)
+            }})
         return res.status(200).json( { favorites })
-        } catch(err) {
-            next(err)
-        }
 })
 
 router.get("/categories", async (req, res, next) => {
