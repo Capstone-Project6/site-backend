@@ -28,7 +28,7 @@ class Event {
         return results.rows
     }
 
-    static async listRecommendedEvents(userId){
+    static async listRecommendedEvents({userId}){
         const results = await db.query(
             `
             SELECT e.event_id AS "Event ID",
@@ -47,11 +47,12 @@ class Event {
                    e.end_time AS "Ending Time"
             FROM events AS e
             JOIN favorites AS f ON e.category_name = f.categories_name  
-            JOIN users AS u ON u.user_id = f.user_id
+            WHERE f.user_id = $1
             GROUP BY e.event_id
             ORDER BY e.created_at DESC
-        `)
-
+        `,
+        [userId]
+        )
         return results.rows
     }
 
@@ -78,7 +79,7 @@ class Event {
         return results.rows[0] 
     }
 
-    static async addFavorite({ interests, userId }){
+    static async addFavorite(interests, {userId}){
         const results = await db.query(
             `
             INSERT INTO favorites 
