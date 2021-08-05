@@ -12,7 +12,7 @@ class Profile {
                 state = $4
             WHERE user_id = $2
             RETURNING user_id AS "userID",
-                      profile_picture AS "profilePicture",
+                      profile_picture AS "profile_picture",
                       city AS "City",
                       state AS "State"
             `,
