@@ -13,6 +13,17 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+router.post("/event-register/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    try {
+        // register for an event
+        const { userId } = req.params
+        const registration = await Event.eventRegistration({registrationInfo: req.body, userId})
+        return res.status(200).json( { registration })
+        } catch(err) {
+            next(err)
+        }
+})
+
 router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
         const recommendations = await Event.listRecommendedEvents()
@@ -46,13 +57,6 @@ router.get("/event-details", async (req, res, next) => {
         }
 })
 
-router.post("/event-register", security.requireAuthenticatedUser, async (req, res, next) => {
-    try {
-        // register for an event
-        } catch(err) {
-            next(err)
-        }
-})
 
 router.get("/search", async (req, res, next) => {
     try {
@@ -70,23 +74,5 @@ router.delete("/event", async (req, res, next) => {
         }
         
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router

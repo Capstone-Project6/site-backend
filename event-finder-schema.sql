@@ -45,6 +45,17 @@ CREATE TABLE events (
     FOREIGN KEY (organizer_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE
 );
+CREATE TABLE attendees (
+    first_name   TEXT NOT NULL,
+    last_name    TEXT NOT NULL,
+    email        TEXT NOT NULL CHECK (position('@' IN email) > 1),
+    phone_number TEXT NOT NULL,
+    tickets_number INTEGER NOT NULL,
+    user_id      INTEGER NOT NULL,
+    event_id     INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
 
 CREATE TABLE events_registered (
     user_id    INTEGER NOT NULL,

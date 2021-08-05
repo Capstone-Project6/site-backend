@@ -69,10 +69,56 @@ class Event {
                     venue AS "venue",
                     description AS "description",
                     event_image AS "eventImage",
-            
+            s
             `, [event.event_name, event.event_organizer, event.venue, event.description, event.event_image, event.start_date, event.end_date] 
             )
         return results.rows[0] 
+    }
+
+    static async eventRegistration({ registrationInfo, userId }){
+        const requiredFields = ["first_name", "last_name", "email", "phone_number", "tickets_number", "event_id"]
+        requiredFields.forEach(field => {
+            if (!registrationInfo.hasOwnProperty(field)){
+                throw new BadRequestError(`Required field - ${field} - missing from request body.`)
+                }
+        })
+
+        const attendeeResults = await db.query(
+            `
+            INSERT INTO attendees (first_name, last_name, email, phone_number, tickets_number, user_id, event_id)
+            VALUES($1, $2, $3, $4, $5, $6, $7)
+            Returning first_name AS "First name",
+                    last_name AS "Last name",
+                    email AS "Email",
+                    phone_number AS "Phone number",
+                    tickets_number AS "Ticket number",
+                    user_id AS "UserId",
+                    event_id AS "EventId"
+            
+            `, 
+                [registrationInfo.first_name, registrationInfo.last_name, registrationInfo.email, registrationInfo.phone_number, registrationInfo.tickets_number, userId, registrationInfo.event_id ]
+        );
+        
+        const profileRegisterResults = await db.query(
+            `
+            INSERT INTO events_registered (user_id, event_id)
+            VALUES($1, $2)
+            Returning user_id AS "UserId",
+                      event_id AS "EventId"
+            
+            `, 
+                [userId, registrationInfo.event_id ]
+        );
+        
+        const updatedAttendeeData = attendeeResults.rows[0]
+        const updatedUserRegistrationData = profileRegisterResults.rows[0]
+
+        return {
+            updatedUserRegistrationData,
+            updatedAttendeeData
+        }
+
+
     }
 }
 
