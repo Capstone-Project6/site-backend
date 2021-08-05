@@ -14,8 +14,9 @@ router.get("/", async (req, res, next) => {
 })
 
 router.get("/:userId/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
+    const { userId } = req.params
     try {
-        const recommendations = await Event.listRecommendedEvents()
+        const recommendations = await Event.listRecommendedEvents({userId})
         return res.status(200).json( { recommendations })
         } catch(err) {
             next(err)
@@ -77,7 +78,7 @@ router.post("/:userId/favorites", async (req, res, next) => {
     const interests = req.body
     const { userId } = req.params
     try {
-        const favorites = await Event.addFavorite({ interests, userId })
+        const favorites = await Event.addFavorite(interests, {userId })
         return res.status(200).json( { favorites })
         } catch(err) {
             next(err)
