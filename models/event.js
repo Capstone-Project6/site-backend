@@ -140,12 +140,27 @@ class Event {
                 [userId, registrationInfo.event_id ]
         );
         
+
+        const eventTicketResults = await db.query(
+            `
+            UPDATE events
+            SET tickets_sold = tickets_sold + $1,
+                tickets_left = tickets_left - $1
+            WHERE event_id = $2
+            Returning tickets_sold AS "Tickets sold",
+                      tickets_left AS "Tickets left"
+            `,
+                [registrationInfo.tickets_number, registrationInfo.event_id]
+        );
+
         const updatedAttendeeData = attendeeResults.rows[0]
         const updatedUserRegistrationData = profileRegisterResults.rows[0]
+        const updatedTicketInfo = eventTicketResults.rows
 
         return {
             updatedUserRegistrationData,
-            updatedAttendeeData
+            updatedAttendeeData,
+            updatedTicketInfo
         }
 
 
