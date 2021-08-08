@@ -155,7 +155,7 @@ class Event {
 
         const updatedAttendeeData = attendeeResults.rows[0]
         const updatedUserRegistrationData = profileRegisterResults.rows[0]
-        const updatedTicketInfo = eventTicketResults.rows
+        const updatedTicketInfo = eventTicketResults.rows[0]
 
         return {
             updatedUserRegistrationData,
