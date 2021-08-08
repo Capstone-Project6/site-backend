@@ -13,6 +13,17 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+router.get("/:eventId", async (req, res, next) => {
+    try {
+      // fetch a single post by id
+      const { eventId } = req.params
+      const event = await Event.fetchEventById(eventId)
+      return res.status(200).json({ event })
+    } catch (err) {
+      next(err)
+    }
+  })
+
 router.post("/event-register/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
         // register for an event
