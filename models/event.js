@@ -181,7 +181,8 @@ class Event {
                 e.beginning_date AS "Beginning Date",
                 e.end_date AS "Ending Date",
                 e.beginning_time AS "Beginning Time",
-                e.end_time AS "Ending Time"
+                e.end_time AS "Ending Time",
+                e.tickets_left As "Tickets left"
             FROM events AS e
             WHERE e.event_id = $1
             `,
