@@ -45,6 +45,17 @@ router.get("/:userId/recommended", security.requireAuthenticatedUser, async (req
         }
 })
 
+router.get("/registered/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const registeredEvents = await Event.listRegisteredEvents({userId})
+        return res.status(200).json( { registeredEvents })
+        } catch(err) {
+            next(err)
+        }
+})
+
+
 router.post("/create-event", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
         // create an event as an organizer 

@@ -191,6 +191,35 @@ class Event {
 
         return results.rows[0]
     }
+
+    static async listRegisteredEvents({userId}){
+        const results = await db.query(
+            `
+            SELECT e.event_id AS "Event ID",
+                   e.event_name AS "Event Name",
+                   e.venue AS "Venue",
+                   e.city AS "City",
+                   e.state As "State",
+                   e.category_name AS "categoryName",
+                   e.description AS "Description",
+                   e.event_image AS "Event Image",
+                   e.created_at AS "Created At",
+                   e.organizer_id AS "Organizer ID",
+                   e.beginning_date AS "Beginning Date",
+                   e.end_date AS "Ending Date",
+                   e.beginning_time AS "Beginning Time",
+                   e.end_time AS "Ending Time"
+            FROM events AS e
+            JOIN events_registered AS r ON r.event_id = e.event_id 
+            WHERE r.user_id = $1
+            GROUP BY e.event_id
+            ORDER BY e.created_at DESC
+        `,
+        [userId]
+        )
+        return results.rows
+    }
+
 }
 
 module.exports = Event
