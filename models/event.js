@@ -104,6 +104,64 @@ class Event {
         )
         return results.rows
     }
+
+
+    static async filterEvents(searchFilters = {}) {
+        let query = `
+        SELECT e.event_id AS "Event ID",
+               e.event_name AS "Event Name",
+               e.venue AS "Venue",
+               e.city AS "City",
+               e.state As "State",
+               e.category_name AS "categoryName",
+               e.description AS "Description",
+               e.event_image AS "Event Image",
+               e.created_at AS "Created At",
+               e.organizer_id AS "Organizer ID",
+               e.beginning_date AS "Beginning Date",
+               e.end_date AS "Ending Date",
+               e.beginning_time AS "Beginning Time",
+               e.end_time AS "Ending Time"
+        FROM events AS e
+        GROUP BY e.event_id
+        ORDER BY e.created_at DESC`
+            let whereExpressions = [];
+            let queryValues = [];
+    
+        const { price, date, location, category } = searchFilters;
+    
+        if (price) {
+          throw new BadRequestError("Min employees cannot be greater than max");
+        }
+    
+        // For each possible search term, add to whereExpressions and queryValues so
+        // we can generate the right SQL
+    
+        if (minEmployees !== undefined) {
+          queryValues.push(minEmployees);
+          whereExpressions.push(`num_employees >= $${queryValues.length}`);
+        }
+    
+        if (maxEmployees !== undefined) {
+          queryValues.push(maxEmployees);
+          whereExpressions.push(`num_employees <= $${queryValues.length}`);
+        }
+    
+        if (name) {
+          queryValues.push(`%${name}%`);
+          whereExpressions.push(`name ILIKE $${queryValues.length}`);
+        }
+    
+        if (whereExpressions.length > 0) {
+          query += " WHERE " + whereExpressions.join(" AND ");
+        }
+    
+        // Finalize query and return results
+    
+        query += " ORDER BY name";
+        const companiesRes = await db.query(query, queryValues);
+        return companiesRes.rows;
+      }
 }
 
 module.exports = Event

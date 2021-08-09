@@ -87,9 +87,18 @@ router.post("/:userId/favorites", async (req, res, next) => {
 
 router.get("/categories", async (req, res, next) => {
     try {
-        console.log("categories")
         const categories = await Event.getCategories()
         return res.status(200).json( { categories } )
+    } catch(err) {
+        next(err)
+    }
+})
+
+router.get("/filtered-events", async (req, res, next) => {
+    const filterCriteria = req.body
+    try {
+        const filtered = await Event.filterEvents({filterCriteria})
+        return res.status(200).json( { filtered } )
     } catch(err) {
         next(err)
     }
