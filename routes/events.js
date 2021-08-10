@@ -95,9 +95,10 @@ router.get("/categories", async (req, res, next) => {
 })
 
 router.get("/filtered-events", async (req, res, next) => {
-    const filterCriteria = req.body
+    const filterCriteria = req.query
+    console.log(filterCriteria)
     try {
-        const filtered = await Event.filterEvents({filterCriteria})
+        const filtered = await Event.filterEvents(filterCriteria)
         return res.status(200).json( { filtered } )
     } catch(err) {
         next(err)

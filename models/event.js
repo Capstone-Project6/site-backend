@@ -124,44 +124,92 @@ class Event {
                e.end_time AS "Ending Time"
         FROM events AS e
         GROUP BY e.event_id
-        ORDER BY e.created_at DESC`
+        `
             let whereExpressions = [];
             let queryValues = [];
     
         const { price, date, location, category } = searchFilters;
-    
-        if (price) {
-          throw new BadRequestError("Min employees cannot be greater than max");
+        
+        console.log(price)
+
+        if ("priceRanges" in price ) { 
+            const range = price.priceRanges[price.indexValue]
+            let lowestValue = 0
+            let highestValue = 0
+            if (range[0] === null){
+                lowestValue = 0
+            }
+            else{
+                lowestValue = range[0]
+            }
+
+            if (range[1] === null){
+                highestValue = 0
+            }
+            else {
+                highestValue = range[1]
+            }
+
+            if (lowestValue === 0 && highestValue === 0) {
+                queryValues.push(highestValue)
+                whereExpressions.push(`price == $${queryValues.length}`)
+            }
+
+            if (lowestValue === 0 && highestValue !== 0){
+                queryValues.push(highestValue)
+                whereExpressions.push(`price < $${queryValues.length}`)
+            }
+
+            if (lowestValue !== 0 && highestValue !== 0){
+                queryValues.push(lowestValue)
+                queryValues.push(highestValue)
+                whereExpressions.push(`price >= $${queryValues.length - 1} AND price <= $${queryValues.length}`)
+            }
+
+            if (lowestValue !== 0 && highestValue === 0){
+                queryValues.push(lowestValue)
+                whereExpressions.push(`price >= $${queryValues.length}`)
+            }
         }
-    
+        if (whereExpressions.length > 0) {
+            query += " WHERE " + whereExpressions.join(" AND ");
+          }
+      
+          // Finalize query and return results
+      
+          query += " ORDER BY created_at DESC";
+          const filterRes = await db.query(query, queryValues);
+          return filterRes.rows;
+
         // For each possible search term, add to whereExpressions and queryValues so
         // we can generate the right SQL
     
-        if (minEmployees !== undefined) {
-          queryValues.push(minEmployees);
-          whereExpressions.push(`num_employees >= $${queryValues.length}`);
-        }
+    //     if (minEmployees !== undefined) {
+    //       queryValues.push(minEmployees);
+    //       whereExpressions.push(`num_employees >= $${queryValues.length}`);
+    //     }
     
-        if (maxEmployees !== undefined) {
-          queryValues.push(maxEmployees);
-          whereExpressions.push(`num_employees <= $${queryValues.length}`);
-        }
+    //     if (maxEmployees !== undefined) {
+    //       queryValues.push(maxEmployees);
+    //       whereExpressions.push(`num_employees <= $${queryValues.length}`);
+    //     }
     
-        if (name) {
-          queryValues.push(`%${name}%`);
-          whereExpressions.push(`name ILIKE $${queryValues.length}`);
-        }
+    //     if (name) {
+    //       queryValues.push(`%${name}%`);
+    //       whereExpressions.push(`name ILIKE $${queryValues.length}`);
+    //     }
     
-        if (whereExpressions.length > 0) {
-          query += " WHERE " + whereExpressions.join(" AND ");
-        }
+    //     if (whereExpressions.length > 0) {
+    //       query += " WHERE " + whereExpressions.join(" AND ");
+    //     }
     
-        // Finalize query and return results
+    //     // Finalize query and return results
     
-        query += " ORDER BY name";
-        const companiesRes = await db.query(query, queryValues);
-        return companiesRes.rows;
-      }
+    //     query += " ORDER BY name";
+    //     const companiesRes = await db.query(query, queryValues);
+    //     return companiesRes.rows;
+    //   }
 }
 
+}
 module.exports = Event
