@@ -11,6 +11,7 @@ class Event {
                    e.event_name AS "Event Name",
                    e.venue AS "Venue",
                    e.city AS "City",
+                   e.price AS "Price",
                    e.state As "State",
                    e.description AS "Description",
                    e.event_image AS "Event Image",
