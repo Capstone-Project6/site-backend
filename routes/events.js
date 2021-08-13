@@ -65,6 +65,15 @@ router.get("/registered/:userId", security.requireAuthenticatedUser, async (req,
         }
 })
 
+router.get("/userRecommendations/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const userRecommededEvents = await Event.listUserRecommendedEvents({userId})
+        return res.status(200).json( { userRecommededEvents })
+        } catch(err) {
+            next(err)
+        }
+})
 
 router.post("/create-event", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
@@ -121,6 +130,16 @@ router.post("/:userId/favorites", async (req, res, next) => {
         }
 })
 
+router.post("/userRecommendation/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    const event = req.body
+    const { userId } = req.params
+    try {
+        const recommendation = await Event.addUserRecommendation(event, {userId })
+        return res.status(200).json( { recommendation })
+        } catch(err) {
+            next(err)
+        }
+})
 
 
 module.exports = router

@@ -93,6 +93,48 @@ class Event {
         return results.rows[0]
     }
 
+    static async addUserRecommendation(event, {userId}){
+        console.log(event)
+        const results = await db.query(
+            `
+            INSERT INTO user_recommendation
+            VALUES($1, $2)
+            RETURNING user_id AS "userId",
+                     event_id AS "eventID"
+            
+             `, [userId, event["Event IDus"] ]
+        )
+        return results.rows[0]
+    }
+
+    static async listUserRecommendedEvents({userId}){
+        const results = await db.query(
+            `
+            SELECT e.event_id AS "Event ID",
+                   e.event_name AS "Event Name",
+                   e.venue AS "Venue",
+                   e.city AS "City",
+                   e.state As "State",
+                   e.category_name AS "categoryName",
+                   e.description AS "Description",
+                   e.event_image AS "Event Image",
+                   e.created_at AS "Created At",
+                   e.organizer_id AS "Organizer ID",
+                   e.beginning_date AS "Beginning Date",
+                   e.end_date AS "Ending Date",
+                   e.beginning_time AS "Beginning Time",
+                   e.end_time AS "Ending Time"
+            FROM events AS e
+            JOIN events_recommended AS r ON r.event_id = e.event_id 
+            WHERE r.user_id = $1
+            GROUP BY e.event_id
+            ORDER BY e.created_at DESC
+        `,
+        [userId]
+        )
+        return results.rows
+    }
+
     static async getCategories(){
         const results = await db.query(
             `SELECT c.category_id,
