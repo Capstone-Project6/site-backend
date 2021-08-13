@@ -27,6 +27,7 @@ CREATE TABLE events (
     -- event_organizer   TEXT NOT NULL,
     venue             TEXT,
     city              TEXT,
+    price             REAL NOT NULL,
     state             TEXT,
     description       TEXT,
     category_name     TEXT NOT NULL,
