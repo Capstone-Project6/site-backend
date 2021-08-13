@@ -112,6 +112,7 @@ class Event {
                e.event_name AS "Event Name",
                e.venue AS "Venue",
                e.city AS "City",
+               e.price AS "Price",
                e.state As "State",
                e.category_name AS "categoryName",
                e.description AS "Description",
@@ -123,61 +124,60 @@ class Event {
                e.beginning_time AS "Beginning Time",
                e.end_time AS "Ending Time"
         FROM events AS e
-        GROUP BY e.event_id
         `
             let whereExpressions = [];
             let queryValues = [];
     
-        const { price, date, location, category } = searchFilters;
+        const { minValue, maxValue } = searchFilters;
         
-        console.log(price)
+        // console.log(price)
+        console.log("SEARCHFILTER", searchFilters)
 
-        if ("priceRanges" in price ) { 
-            const range = price.priceRanges[price.indexValue]
-            let lowestValue = 0
-            let highestValue = 0
-            if (range[0] === null){
-                lowestValue = 0
-            }
-            else{
-                lowestValue = range[0]
-            }
+        let lowestValue = 0
+        let highestValue = 0
+        if (minValue === null){
+            lowestValue = 0
+        }
+        else{
+            lowestValue = minValue
+        }
 
-            if (range[1] === null){
-                highestValue = 0
-            }
-            else {
-                highestValue = range[1]
-            }
+        if (maxValue === null){
+            highestValue = 0
+        }
+        else {
+            highestValue = maxValue
+        }
 
-            if (lowestValue === 0 && highestValue === 0) {
-                queryValues.push(highestValue)
-                whereExpressions.push(`price == $${queryValues.length}`)
-            }
+        if (lowestValue === 0 && highestValue === 0) {
+            queryValues.push(highestValue)
+            whereExpressions.push(`price == $${queryValues.length}`)
+        }
 
-            if (lowestValue === 0 && highestValue !== 0){
-                queryValues.push(highestValue)
-                whereExpressions.push(`price < $${queryValues.length}`)
-            }
+        if (lowestValue === 0 && highestValue !== 0){
+            queryValues.push(highestValue)
+            whereExpressions.push(`price < $${queryValues.length}`)
+        }
 
-            if (lowestValue !== 0 && highestValue !== 0){
-                queryValues.push(lowestValue)
-                queryValues.push(highestValue)
-                whereExpressions.push(`price >= $${queryValues.length - 1} AND price <= $${queryValues.length}`)
-            }
+        if (lowestValue !== 0 && highestValue !== 0){
+            queryValues.push(lowestValue)
+            queryValues.push(highestValue)
+            whereExpressions.push(`price >= $${queryValues.length - 1} AND price <= $${queryValues.length}`)
+        }
 
-            if (lowestValue !== 0 && highestValue === 0){
-                queryValues.push(lowestValue)
-                whereExpressions.push(`price >= $${queryValues.length}`)
-            }
+        if (lowestValue !== 0 && highestValue === 0){
+            queryValues.push(lowestValue)
+            whereExpressions.push(`price >= $${queryValues.length}`)
         }
         if (whereExpressions.length > 0) {
-            query += " WHERE " + whereExpressions.join(" AND ");
+            query += "WHERE " + whereExpressions.join(" AND ");
           }
       
           // Finalize query and return results
       
           query += " ORDER BY created_at DESC";
+          console.log("QUERY", query)
+          console.log("qValues:", queryValues)
           const filterRes = await db.query(query, queryValues);
           return filterRes.rows;
 
