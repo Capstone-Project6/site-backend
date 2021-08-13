@@ -13,6 +13,14 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+router.get("/categories", async (req, res, next) => {
+    try {
+        const categories = await Event.getCategories()
+        return res.status(200).json( { categories } )
+    } catch(err) {
+        next(err)
+    }
+})
 router.get("/:eventId", async (req, res, next) => {
     try {
       // fetch a single post by id
@@ -111,14 +119,6 @@ router.post("/:userId/favorites", async (req, res, next) => {
         }
 })
 
-router.get("/categories", async (req, res, next) => {
-    try {
-        const categories = await Event.getCategories()
-        return res.status(200).json( { categories } )
-    } catch(err) {
-        next(err)
-    }
-})
 
 router.get("/filtered-events", async (req, res, next) => {
     const filterCriteria = req.query
