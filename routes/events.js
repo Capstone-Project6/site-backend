@@ -113,7 +113,6 @@ router.post("/:userId/favorites", async (req, res, next) => {
 
 router.get("/categories", async (req, res, next) => {
     try {
-        console.log("categories")
         const categories = await Event.getCategories()
         return res.status(200).json( { categories } )
     } catch(err) {
