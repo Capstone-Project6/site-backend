@@ -65,6 +65,13 @@ CREATE TABLE events_registered (
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 
+CREATE TABLE recommendations (
+    user_id    INTEGER NOT NULL,
+    event_id   INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
+
 CREATE TABLE reviews (
     review_id     SERIAL PRIMARY KEY,
     rating        INTEGER,

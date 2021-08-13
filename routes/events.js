@@ -35,6 +35,17 @@ router.post("/event-register/:userId", security.requireAuthenticatedUser, async 
         }
 })
 
+router.post("/addRecommendation/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    try {
+        // register for an event
+        const { userId } = req.params
+        const recommendation = await Event.addRecommendation({eventID: req.body, userId})
+        return res.status(200).json( { recommendation })
+        } catch(err) {
+            next(err)
+        }
+})
+
 router.get("/:userId/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
     const { userId } = req.params
     try {

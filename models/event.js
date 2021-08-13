@@ -82,7 +82,7 @@ class Event {
     static async addFavorite(interests, {userId}){
         const results = await db.query(
             `
-            INSERT INTO favorites 
+            INSERT INTO recommendations
             VALUES($1, $2, $3)
             RETURNING user_id AS "userId",
              categories_id AS "categoryId",
@@ -92,6 +92,20 @@ class Event {
         )
         return results.rows[0]
     }
+
+    static async addRecommendation(eventID, {userId}){
+        const results = await db.query(
+            `
+            INSERT INTO recommendations 
+            VALUES($1, $2)
+            RETURNING user_id AS "userId",
+             categories_id AS "categoryId",
+            
+             `, [userId, eventID]
+        )
+        return results.rows[0]
+    }
+
 
     static async getCategories(){
         const results = await db.query(
