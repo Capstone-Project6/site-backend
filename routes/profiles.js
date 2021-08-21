@@ -7,6 +7,7 @@ router.patch("/:userId", security.requireAuthenticatedUser, async (req, res, nex
     try {
         // update a user profile
         const { userId } = req.params
+        console.log(res.locals.user)
         const profile = await Profile.editProfile({ profileUpdate: req.body, userId})
         return res.status(200).json( { profile })
         } catch(err) {

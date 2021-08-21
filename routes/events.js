@@ -13,13 +13,56 @@ router.get("/", async (req, res, next) => {
     }
 })
 
-router.get("/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
+router.get("/categories", async (req, res, next) => {
     try {
-        const recommendations = await Event.listRecommendedEvents()
+        const categories = await Event.getCategories()
+        return res.status(200).json( { categories } )
+    } catch(err) {
+        next(err)
+    }
+})
+router.get("/:eventId", async (req, res, next) => {
+    try {
+      // fetch a single post by id
+      const { eventId } = req.params
+      const event = await Event.fetchEventById(eventId)
+      return res.status(200).json({ event })
+    } catch (err) {
+      next(err)
+    }
+  })
+
+router.post("/event-register/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    try {
+        // register for an event
+        const { userId } = req.params
+        const registration = await Event.eventRegistration({registrationInfo: req.body, userId})
+        return res.status(200).json( { registration })
         } catch(err) {
             next(err)
         }
 })
+
+router.get("/:userId/recommended", security.requireAuthenticatedUser, async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const recommendations = await Event.listRecommendedEvents({userId})
+        return res.status(200).json( { recommendations })
+        } catch(err) {
+            next(err)
+        }
+})
+
+router.get("/registered/:userId", security.requireAuthenticatedUser, async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const registeredEvents = await Event.listRegisteredEvents({userId})
+        return res.status(200).json( { registeredEvents })
+        } catch(err) {
+            next(err)
+        }
+})
+
 
 router.post("/create-event", security.requireAuthenticatedUser, async (req, res, next) => {
     try {
@@ -46,13 +89,6 @@ router.get("/event-details", async (req, res, next) => {
         }
 })
 
-router.post("/event-register", security.requireAuthenticatedUser, async (req, res, next) => {
-    try {
-        // register for an event
-        } catch(err) {
-            next(err)
-        }
-})
 
 router.get("/search", async (req, res, next) => {
     try {
@@ -72,21 +108,41 @@ router.delete("/event", async (req, res, next) => {
 })
 
 
+router.post("/:userId/favorites", async (req, res, next) => {
+    const interests = req.body
+    const { userId } = req.params
+    try {
+        const favorites = await Event.addFavorite(interests, {userId })
+        return res.status(200).json( { favorites })
+        } catch(err) {
+            next(err)
+        }
+})
 
 
+router.get("/filtered-events", async (req, res, next) => {
+    const filterCriteria = req.query
+    console.log(filterCriteria)
+    try {
+        const filtered = await Event.filterEvents(filterCriteria)
+        return res.status(200).json( { filtered } )
+        const categories = await Event.getCategories()
+        return res.status(200).json( { categories } )
+    } catch(err) {
+        next(err)
+    }
+})
 
-
-
-
-
-
-
-
-
-
-
-
-
+router.get("/filtered-events", async (req, res, next) => {
+    const filterCriteria = req.query
+    console.log(filterCriteria)
+    try {
+        const filtered = await Event.filterEvents(filterCriteria)
+        return res.status(200).json( { filtered } )
+    } catch(err) {
+        next(err)
+    }
+})
 
 
 module.exports = router

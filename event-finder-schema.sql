@@ -17,7 +17,8 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     category_id    SERIAL PRIMARY KEY,
-    category_name  TEXT NOT NULL UNIQUE
+    category_name  TEXT NOT NULL UNIQUE,
+    category_image TEXT NOT NULL
 );
 
 CREATE TABLE events (
@@ -26,6 +27,7 @@ CREATE TABLE events (
     -- event_organizer   TEXT NOT NULL,
     venue             TEXT,
     city              TEXT,
+    price             REAL NOT NULL,
     state             TEXT,
     description       TEXT,
     category_name     TEXT NOT NULL,
@@ -44,6 +46,17 @@ CREATE TABLE events (
     -- FOREIGN KEY (organizer_id) REFERENCES event_organizers(id) ON DELETE CASCADE
     FOREIGN KEY (organizer_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE
+);
+CREATE TABLE attendees (
+    first_name   TEXT NOT NULL,
+    last_name    TEXT NOT NULL,
+    email        TEXT NOT NULL CHECK (position('@' IN email) > 1),
+    phone_number TEXT NOT NULL,
+    tickets_number INTEGER NOT NULL,
+    user_id      INTEGER NOT NULL,
+    event_id     INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 
 CREATE TABLE events_registered (
@@ -64,9 +77,9 @@ CREATE TABLE reviews (
 
 CREATE TABLE favorites (
     user_id          INTEGER NOT NULL,
-    categories_name    TEXT NOT NULL,
-    categories_id      INTEGER NOT NULL,
+    categories_id    INTEGER NOT NULL,
+    categories_name  TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (categories_name) REFERENCES categories(category_name) ON DELETE CASCADE,
-    FOREIGN KEY (categories_id) REFERENCES categories(category_id) ON DELETE CASCADE
+    FOREIGN KEY (categories_id) REFERENCES categories(category_id) ON DELETE CASCADE,
+    FOREIGN KEY (categories_name) REFERENCES categories(category_name) ON DELETE CASCADE
 );

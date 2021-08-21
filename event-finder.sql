@@ -7,4 +7,4 @@ CREATE DATABASE event_finder;
 
 \i event-finder-schema.sql
 
-\i event-finder-data.sql 
+\i event-finder-data.sql
